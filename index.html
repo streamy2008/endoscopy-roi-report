@@ -171,15 +171,24 @@ Application of the wireless wearable monitoring system improves the turnaround t
         }
 
         async function exportPDF() {
-            const element = document.getElementById('pdf-content');
+            const element = document.getElementById('report-content');
             const hosp = document.getElementById('hospital_name').value || "内镜中心";
+            const originalStyle = element.style.width;
+    element.style.width = "375px";
             const opt = { 
-                margin: 10, filename: `${hosp}_效率提升收入提高报告.pdf`, 
-                html2canvas: { scale: 3, useCORS: true }, 
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-            };
+        margin: [10, 5, 10, 5], // 上, 左, 下, 右
+        filename: `${hosp}_效率报告.pdf`, 
+        image: { type: 'jpeg', quality: 0.98 },
+        windowWidth: 375  
+    
             html2pdf().set(opt).from(element).save();
         }
+    scale: 2,
+    useCORS: true,
+    letterRendering: true,
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+    };
 
         window.onload = () => { setDate(); update(); };
     </script>
