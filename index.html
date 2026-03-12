@@ -46,8 +46,8 @@
 
         <div class="space-y-6 pt-4 border-t border-sky-100 no-print">
             <div class="card p-5 shadow-sm">
-                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>效率提升 (分钟/例)</span><span class="text-rose-500 font-black text-xl tabular-nums" id="v_tsaved">8</span></div>
-                <input type="range" id="tsaved" min="0" max="25" step="1" value="8" class="slider-time" oninput="update()">
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>效率提升 (分钟/例)</span><span class="text-rose-500 font-black text-xl tabular-nums" id="v_tsaved">3.3</span></div>
+                <input type="range" id="tsaved" min="0" max="25" step="0.1" value="3.3" class="slider-time" oninput="update()">
             </div>
             <div class="card p-5 shadow-sm">
                 <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>现有日手术量 (例)</span><span class="text-blue-600 font-black text-xl tabular-nums" id="v_volume">20</span></div>
@@ -58,7 +58,7 @@
                 <input type="range" id="price" min="300" max="1500" step="10" value="600" class="slider-price" oninput="update()">
             </div>
             <div class="card p-5 shadow-sm">
-                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>项目预算 (¥)</span><span class="text-emerald-600 font-black text-xl tabular-nums" id="v_cinvest">400,000</span></div>
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>项目总投入 (¥)</span><span class="text-emerald-600 font-black text-xl tabular-nums" id="v_cinvest">400,000</span></div>
                 <input type="range" id="cinvest" min="0" max="2000000" step="10000" value="400000" class="slider-inv" oninput="update()">
             </div>
         </div>
@@ -70,13 +70,13 @@
 
         <div class="space-y-4 mt-8">
             <div class="card p-8 bg-emerald-600 shadow-lg relative overflow-hidden border-none text-center text-white">
-                <p class="text-emerald-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-emerald-700/50 px-3 py-1 inline-block">因效率提升增加的年收入金额</p>
+                <p class="text-emerald-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-emerald-700/50 px-3 py-1 inline-block">预计年度总经济产出</p>
                 <p class="text-6xl font-black text-lime-300 tabular-nums tracking-tighter" id="total_revenue">¥0</p>
                 <div class="absolute -right-4 -bottom-4 opacity-10 font-black text-7xl italic select-none">OUTPUT</div>
             </div>
 
             <div class="card p-8 bg-rose-500 shadow-lg relative overflow-hidden border-none text-center text-white">
-                <p class="text-rose-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-rose-600/50 px-3 py-1 inline-block">项目预算回收周期</p>
+                <p class="text-rose-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-rose-600/50 px-3 py-1 inline-block">预计成本回收周期</p>
                 <p class="text-6xl font-black tabular-nums tracking-tighter"><span id="p_payback">0.0</span> <span class="text-3xl font-light opacity-80 uppercase italic">Years</span></p>
                 <div class="absolute -right-4 -bottom-4 opacity-15 font-black text-7xl italic select-none">RECOVERY</div>
             </div>
@@ -85,7 +85,7 @@
         <div class="space-y-3 mt-8 no-print text-center">
             <button onclick="exportPDF()" class="w-full bg-rose-600 text-white py-5 rounded-2xl font-black shadow-xl flex items-center justify-center gap-3 hover:bg-rose-700 active:scale-95 transition-all text-base tracking-widest">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                生成效率提升数字报告 (PDF)
+                生成收入产出报告 (PDF)
             </button>
             
             <button onclick="resetAll()" class="w-full bg-slate-800 text-slate-300 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-900 transition-all text-sm">
@@ -94,7 +94,15 @@
                 </svg>
                 清空数据重新测算
             </button>
-            <p class="text-[9px] text-sky-400 mt-2 italic px-4">注：产出计算基于 80% 的效率转化率。日手术量测算按每年250个工作日折算。本报告仅供决策参考。</p>
+            
+            <div class="text-left px-4 mt-6 space-y-2">
+                <p class="text-[9px] text-sky-400 italic">注 1：产出计算基于 80% 的效率转化率。日手术量测算按每年250个工作日折算。本报告仅供决策参考。</p>
+                <p class="text-[9px] text-sky-400 italic leading-relaxed">
+                    注 2：引用SCI文献
+Application of the wireless wearable monitoring system improves the turnaround time in gastrointestinal endoscopy center <br>
+                    下载链接：<a href="https://academic.oup.com/pmj/article-abstract/101/1199/873/8178243?redirectedFrom=fulltext" target="_blank" class="underline">点击访问</a>
+                </p>
+            </div>
         </div>
     </div>
 
@@ -125,7 +133,7 @@
             const price = parseFloat(document.getElementById('price').value);
             const cInvest = parseFloat(document.getElementById('cinvest').value);
             
-            // 修改点：将日手术量转化为年手术量（按每年250个工作日计算）
+            // 将日手术量转化为年手术量（按每年250个工作日计算）
             const volumeYear = dailyVolume * 250;
             
             const totalMin = tSaved * volumeYear;
@@ -147,7 +155,8 @@
         function resetAll() {
             if(!confirm("确定清空数据？")) return;
             document.getElementById('hospital_name').value = "";
-            document.getElementById('tsaved').value = 8;
+            // 重置默认值为 3.3
+            document.getElementById('tsaved').value = 3.3;
             document.getElementById('volume').value = 20;
             document.getElementById('price').value = 600;
             document.getElementById('cinvest').value = 400000;
