@@ -58,7 +58,7 @@
                 <input type="range" id="price" min="300" max="1500" step="10" value="600" class="slider-price" oninput="update()">
             </div>
             <div class="card p-5 shadow-sm">
-                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>项目总投入 (¥)</span><span class="text-emerald-600 font-black text-xl tabular-nums" id="v_cinvest">400,000</span></div>
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>项目预算 (¥)</span><span class="text-emerald-600 font-black text-xl tabular-nums" id="v_cinvest">400,000</span></div>
                 <input type="range" id="cinvest" min="0" max="2000000" step="10000" value="400000" class="slider-inv" oninput="update()">
             </div>
         </div>
@@ -70,13 +70,13 @@
 
         <div class="space-y-4 mt-8">
             <div class="card p-8 bg-emerald-600 shadow-lg relative overflow-hidden border-none text-center text-white">
-                <p class="text-emerald-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-emerald-700/50 px-3 py-1 inline-block">预计年度总经济产出</p>
+                <p class="text-emerald-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-emerald-700/50 px-3 py-1 inline-block">因效率提升增加的年收入金额</p>
                 <p class="text-6xl font-black text-lime-300 tabular-nums tracking-tighter" id="total_revenue">¥0</p>
                 <div class="absolute -right-4 -bottom-4 opacity-10 font-black text-7xl italic select-none">OUTPUT</div>
             </div>
 
             <div class="card p-8 bg-rose-500 shadow-lg relative overflow-hidden border-none text-center text-white">
-                <p class="text-rose-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-rose-600/50 px-3 py-1 inline-block">预计成本回收周期</p>
+                <p class="text-rose-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-rose-600/50 px-3 py-1 inline-block">项目预算回收周期</p>
                 <p class="text-6xl font-black tabular-nums tracking-tighter"><span id="p_payback">0.0</span> <span class="text-3xl font-light opacity-80 uppercase italic">Years</span></p>
                 <div class="absolute -right-4 -bottom-4 opacity-15 font-black text-7xl italic select-none">RECOVERY</div>
             </div>
@@ -85,7 +85,7 @@
         <div class="space-y-3 mt-8 no-print text-center">
             <button onclick="exportPDF()" class="w-full bg-rose-600 text-white py-5 rounded-2xl font-black shadow-xl flex items-center justify-center gap-3 hover:bg-rose-700 active:scale-95 transition-all text-base tracking-widest">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                生成收入产出报告 (PDF)
+                生成效率提升数字报告 (PDF)
             </button>
             
             <button onclick="resetAll()" class="w-full bg-slate-800 text-slate-300 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-900 transition-all text-sm">
