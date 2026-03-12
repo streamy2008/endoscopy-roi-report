@@ -51,14 +51,14 @@
             </div>
             <div class="card p-5 shadow-sm">
                 <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>现有日手术量 (例)</span><span class="text-blue-600 font-black text-xl tabular-nums" id="v_volume">20</span></div>
-                <input type="range" id="volume" min="10" max="500" step="1" value="20" class="slider-vol" oninput="update()">
+                <input type="range" id="volume" min="10" max="500" step="1" value="80" class="slider-vol" oninput="update()">
             </div>
             <div class="card p-5 shadow-sm">
                 <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>单例收费价格 (¥)</span><span class="text-yellow-600 font-black text-xl tabular-nums" id="v_price">600</span></div>
-                <input type="range" id="price" min="300" max="1500" step="10" value="600" class="slider-price" oninput="update()">
+                <input type="range" id="price" min="300" max="1500" step="10" value="460" class="slider-price" oninput="update()">
             </div>
             <div class="card p-5 shadow-sm">
-                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>项目总投入 (¥)</span><span class="text-emerald-600 font-black text-xl tabular-nums" id="v_cinvest">400,000</span></div>
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>项目预算 (¥)</span><span class="text-emerald-600 font-black text-xl tabular-nums" id="v_cinvest">400,000</span></div>
                 <input type="range" id="cinvest" min="0" max="2000000" step="10000" value="400000" class="slider-inv" oninput="update()">
             </div>
         </div>
@@ -70,13 +70,13 @@
 
         <div class="space-y-4 mt-8">
             <div class="card p-8 bg-emerald-600 shadow-lg relative overflow-hidden border-none text-center text-white">
-                <p class="text-emerald-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-emerald-700/50 px-3 py-1 inline-block">预计年度总经济产出</p>
+                <p class="text-emerald-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-emerald-700/50 px-3 py-1 inline-block">效率提升年度收入增加金额</p>
                 <p class="text-6xl font-black text-lime-300 tabular-nums tracking-tighter" id="total_revenue">¥0</p>
                 <div class="absolute -right-4 -bottom-4 opacity-10 font-black text-7xl italic select-none">OUTPUT</div>
             </div>
 
             <div class="card p-8 bg-rose-500 shadow-lg relative overflow-hidden border-none text-center text-white">
-                <p class="text-rose-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-rose-600/50 px-3 py-1 inline-block">预计成本回收周期</p>
+                <p class="text-rose-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-rose-600/50 px-3 py-1 inline-block">预算成本回收周期</p>
                 <p class="text-6xl font-black tabular-nums tracking-tighter"><span id="p_payback">0.0</span> <span class="text-3xl font-light opacity-80 uppercase italic">Years</span></p>
                 <div class="absolute -right-4 -bottom-4 opacity-15 font-black text-7xl italic select-none">RECOVERY</div>
             </div>
@@ -96,10 +96,10 @@
             </button>
             
             <div class="text-left px-4 mt-6 space-y-2">
-                <p class="text-[9px] text-sky-400 italic">注 1：产出计算基于 80% 的效率转化率。日手术量测算按每年250个工作日折算。本报告仅供决策参考。</p>
-                <p class="text-[9px] text-sky-400 italic leading-relaxed">
+                <p class="text-[12px] text-sky-400 italic">注 1：产出计算基于 80% 的效率转化率。日手术量测算按每年250个工作日折算。本报告仅供决策参考。</p>
+                <p class="text-[12px] text-sky-400 italic leading-relaxed">
                     注 2：引用SCI文献
-Application of the wireless wearable monitoring system improves the turnaround time in gastrointestinal endoscopy center <br>
+Application of the wireless wearable monitoring system improves the turnaround time in gastrointestinal endoscopy center（可穿戴设备促进无痛消化内镜的周转和安全） <br>
                     下载链接：<a href="https://academic.oup.com/pmj/article-abstract/101/1199/873/8178243?redirectedFrom=fulltext" target="_blank" class="underline">点击访问</a>
                 </p>
             </div>
