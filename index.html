@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>收入产出比报告系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { background-color: #f0f9ff; }
+        .card { background: white; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: none; }
+        
+        input[type=range] { height: 8px; background: #e0f2fe; border-radius: 999px; appearance: none; cursor: pointer; width: 100%; }
+        input[type=range]::-webkit-slider-thumb { appearance: none; width: 24px; height: 24px; border-radius: 50%; border: 4px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s; }
+        
+        .slider-time::-webkit-slider-thumb { background: #f472b6; }
+        .slider-vol::-webkit-slider-thumb { background: #fb923c; }
+        .slider-price::-webkit-slider-thumb { background: #facc15; }
+        .slider-inv::-webkit-slider-thumb { background: #4ade80; }
+
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="p-4 font-sans text-slate-700">
+    <div class="max-w-md mx-auto space-y-4 pb-10" id="report-content">
+        
+        <div class="flex justify-between items-start pt-4 px-2">
+            <div class="text-left">
+                <p class="text-[10px] text-sky-600 font-bold uppercase tracking-widest">报告日期 / Date</p>
+                <p class="text-xs font-mono text-sky-800 font-black" id="current_date"></p>
+            </div>
+            
+            <div class="relative group cursor-pointer no-print" onclick="document.getElementById('logo_input').click()">
+                <div id="logo_preview" class="w-16 h-16 border-2 border-dashed border-sky-200 rounded-2xl flex items-center justify-center text-[10px] text-sky-400 text-center leading-tight hover:bg-white hover:border-sky-300 transition-all bg-white/50">
+                    点击上传<br>Logo
+                </div>
+                <input type="file" id="logo_input" class="hidden" accept="image/*" onchange="handleLogo(this)">
+            </div>
+            <div id="logo_display" class="hidden w-16 h-16 object-contain"></div>
+        </div>
+
+        <div class="text-center py-4 relative">
+            <input type="text" id="hospital_name" class="text-2xl font-black text-slate-900 border-b-2 border-slate-100 hover:border-sky-300 focus:border-sky-500 bg-transparent text-center w-full outline-none transition-all placeholder:text-slate-300" placeholder="点击输入医院/科室名称">
+            <p class="text-[10px] text-sky-500 mt-2.5 tracking-[0.4em] uppercase font-bold">收入产出比报告</p>
+        </div>
+
+        <div class="space-y-6 pt-4 border-t border-sky-100 no-print">
+            <div class="card p-5 shadow-sm">
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>效率提升 (分钟/例)</span><span class="text-rose-500 font-black text-xl tabular-nums" id="v_tsaved">8</span></div>
+                <input type="range" id="tsaved" min="0" max="25" step="1" value="8" class="slider-time" oninput="update()">
+            </div>
+            <div class="card p-5 shadow-sm">
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>现有年手术量 (例)</span><span class="text-blue-600 font-black text-xl tabular-nums" id="v_volume">5000</span></div>
+                <input type="range" id="volume" min="500" max="15000" step="100" value="5000" class="slider-vol" oninput="update()">
+            </div>
+            <div class="card p-5 shadow-sm">
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>单例收费价格 (¥)</span><span class="text-yellow-600 font-black text-xl tabular-nums" id="v_price">600</span></div>
+                <input type="range" id="price" min="300" max="1000" step="10" value="600" class="slider-price" oninput="update()">
+            </div>
+            <div class="card p-5 shadow-sm">
+                <div class="flex justify-between mb-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><span>项目总投入 (¥)</span><span class="text-emerald-600 font-black text-xl tabular-nums" id="v_cinvest">400,000</span></div>
+                <input type="range" id="cinvest" min="0" max="2000000" step="10000" value="400000" class="slider-inv" oninput="update()">
+            </div>
+        </div>
+
+        <div class="card p-4 bg-white/70 text-[11px] space-y-2 border border-sky-100 mt-4 backdrop-blur-sm">
+            <div class="flex justify-between font-medium"><span>测算假设:</span><span id="p_summary" class="text-sky-800 font-bold tracking-tight text-right">--</span></div>
+            <div class="flex justify-between border-t border-sky-50 pt-1.5 text-orange-600 font-medium"><span>预计释放产能(增台):</span><span id="extra_cases_val" class="font-bold">0 例</span></div>
+        </div>
+
+        <div class="space-y-4 mt-8">
+            <div class="card p-8 bg-emerald-600 shadow-lg relative overflow-hidden border-none text-center">
+                <p class="text-emerald-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-emerald-700/50 px-3 py-1 inline-block">预计年度总经济产出</p>
+                <p class="text-6xl font-black text-lime-300 tabular-nums tracking-tighter" id="total_revenue">¥0</p>
+                <div class="absolute -right-4 -bottom-4 opacity-10 font-black text-7xl italic select-none">OUTPUT</div>
+            </div>
+
+            <div class="card p-8 bg-rose-500 shadow-lg relative overflow-hidden border-none text-center text-white">
+                <p class="text-rose-100 text-[11px] uppercase font-bold tracking-widest mb-3 rounded-full bg-rose-600/50 px-3 py-1 inline-block">预计成本回收周期</p>
+                <p class="text-6xl font-black tabular-nums tracking-tighter"><span id="p_payback">0.0</span> <span class="text-3xl font-light opacity-80 uppercase italic">Years</span></p>
+                <div class="absolute -right-4 -bottom-4 opacity-15 font-black text-7xl italic select-none">RECOVERY</div>
+            </div>
+        </div>
+
+        <div class="space-y-3 mt-8 no-print text-center">
+            <button onclick="exportPDF()" class="w-full bg-rose-600 text-white py-5 rounded-2xl font-black shadow-xl flex items-center justify-center gap-3 hover:bg-rose-700 active:scale-95 transition-all text-base tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                生成收入产出报告 (PDF)
+            </button>
+            
+            <button onclick="resetAll()" class="w-full bg-slate-800 text-slate-300 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-900 transition-all text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                清空数据重新测算
+            </button>
+            <p class="text-[9px] text-sky-400 mt-2 italic px-4">注：产出计算基于 80% 的效率转化率。本报告仅供决策参考。</p>
+        </div>
+    </div>
+
+    <script>
+        function setDate() {
+            document.getElementById('current_date').innerText = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+        }
+
+        function handleLogo(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('logo_preview');
+                    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain">`;
+                    preview.classList.remove('border-dashed', 'bg-white/50');
+                    preview.classList.add('bg-white');
+                    const display = document.getElementById('logo_display');
+                    display.innerHTML = `<img src="${e.target.result}" style="width: 64px; height: 64px; object-fit: contain;">`;
+                    display.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function update() {
+            const tSaved = parseFloat(document.getElementById('tsaved').value);
+            const volume = parseFloat(document.getElementById('volume').value);
+            const price = parseFloat(document.getElementById('price').value);
+            const cInvest = parseFloat(document.getElementById('cinvest').value);
+            
+            const totalMin = tSaved * volume;
+            const extraCases = Math.floor((totalMin * 0.8) / 25); 
+            const revenue = extraCases * price;
+            const payback = revenue > 0 ? cInvest / revenue : 0;
+
+            document.getElementById('v_tsaved').innerText = tSaved;
+            document.getElementById('v_volume').innerText = volume.toLocaleString();
+            document.getElementById('v_price').innerText = price.toLocaleString();
+            document.getElementById('v_cinvest').innerText = cInvest.toLocaleString();
+
+            document.getElementById('total_revenue').innerText = '¥' + Math.round(revenue).toLocaleString();
+            document.getElementById('p_payback').innerText = payback.toFixed(1);
+            document.getElementById('extra_cases_val').innerText = extraCases.toLocaleString() + ' 例';
+            document.getElementById('p_summary').innerText = `节约${tSaved}min | 现状${volume}例 | 单价¥${price}`;
+        }
+
+        function resetAll() {
+            if(!confirm("确定清空数据？")) return;
+            document.getElementById('hospital_name').value = "";
+            document.getElementById('tsaved').value = 8;
+            document.getElementById('volume').value = 5000;
+            document.getElementById('price').value = 600;
+            document.getElementById('cinvest').value = 400000;
+            const preview = document.getElementById('logo_preview');
+            preview.innerHTML = "点击上传<br>Logo";
+            preview.classList.add('border-dashed', 'bg-white/50');
+            preview.classList.remove('bg-white');
+            document.getElementById('logo_display').innerHTML = "";
+            document.getElementById('logo_display').classList.add('hidden');
+            setDate();
+            update();
+        }
+
+        function exportPDF() {
+            const element = document.getElementById('report-content');
+            const hosp = document.getElementById('hospital_name').value || "内镜中心";
+            const opt = { 
+                margin: 10, filename: `${hosp}_收入产出报告.pdf`, 
+                html2canvas: { scale: 3, useCORS: true }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        window.onload = () => { setDate(); update(); };
+    </script>
+</body>
+</html>
